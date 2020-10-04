@@ -16,21 +16,16 @@ let API_KEY = "a8e71c9932b20c4ceb0aed183e6a83bb";
  */
 
 getWeatherData = (city) => {
-  const URL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`;
+  const URL = `https://api.openweathermap.org/data/2.5/weather?q=`;
   //HINT: Use template literals to create a url with input and an API key
-  let wheather_data = fetch(URL);
-  console.log(wheather_data);
+  const FullURL = `${URL}${city}&appid=${API_KEY}&units=imperial`;
+  //console.log(FullURL);
+  let wheather_data = fetch(FullURL);
+  // console.log(wheather_data);
   //CODE GOES HERE
-  wheather_data
-    .then((response) => {
-      return response.json();
-    })
-    .then((resData) => {
-      showWeatherData(resData["main"]);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  return wheather_data.then((response) => {
+    return response.json();
+  });
 };
 
 /**
@@ -40,7 +35,13 @@ getWeatherData = (city) => {
 searchCity = () => {
   const city = document.getElementById("city-input").value;
   // CODE GOES HERE
-  getWeatherData(city);
+  getWeatherData(city)
+    .then((resData) => {
+      showWeatherData(resData);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 /**
@@ -50,7 +51,13 @@ searchCity = () => {
 showWeatherData = (weatherData) => {
   //CODE GOES HERE
   console.log(weatherData);
-  document.getElementById("temp").textContent = weatherData.temp;
-  document.getElementById("min-temp").textContent = weatherData.temp_min;
-  document.getElementById("max-temp").textContent = weatherData.temp_max;
+  document.getElementById("weather-type").textContent =
+    weatherData["weather"][0].main;
+  document.getElementById("city-name").textContent = weatherData["name"];
+
+  document.getElementById("temp").textContent = weatherData["main"].temp;
+  document.getElementById("min-temp").textContent =
+    weatherData["main"].temp_min;
+  document.getElementById("max-temp").textContent =
+    weatherData["main"].temp_max;
 };
